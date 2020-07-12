@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views import View
@@ -55,7 +55,6 @@ def create_vacancy(request):
     company = get_object_or_404(Company, owner=request.user)
     vacancy = Vacancy.objects.create(
         title='default title',
-        specialty=BASE_SPECIALTY,
         company=company,
         skills='default skills',
         description='default description',
@@ -69,6 +68,8 @@ def create_vacancy(request):
 class EditVacancyView(View):
     def get_data_for_context(self, vacancy_id):
         vacancy = Vacancy.objects.filter(id=vacancy_id).first()
+        if not vacancy:
+            raise Http404()
         specialties = Specialty.objects.all()
         vacancy_applications = Application.objects.filter(vacancy=vacancy)
         form = VacancyForm(instance=vacancy)
