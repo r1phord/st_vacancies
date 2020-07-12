@@ -5,7 +5,7 @@ from django.contrib.auth.views import LogoutView
 from django.urls import path, include
 
 from vacancies.views import MainView, CompanyView, custom_handler500, custom_handler404, MyLoginView, RegisterView, \
-    ResumeView
+    ResumeView, SearchView
 
 handler404 = custom_handler404
 handler500 = custom_handler500
@@ -20,6 +20,7 @@ urlpatterns = [
     path('myresume', ResumeView.as_view(), name='myresume'),
     path('vacancies/', include('vacancies.urls')),
     path('mycompany/', include('mycompany.urls')),
+    path('search/', SearchView.as_view(), name='search')
 ]
 
 if settings.DEBUG:

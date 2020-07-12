@@ -1,8 +1,10 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
+from django.db.models import Q
 from django.http import HttpResponseNotFound, HttpResponseServerError, Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.views import View
+from django.views.generic import ListView
 
 from st_vacancies.settings import LOGIN_REDIRECT_URL
 from vacancies.forms import ApplicationForm, RegisterForm, LoginForm, ResumeForm
@@ -165,3 +167,14 @@ class ResumeView(View):
             'form': resume_form,
             'resume': resume,
         })
+
+
+class SearchView(ListView):
+    model = Vacancy
+    template_name = 'vacancies/search.html'
+
+    def get_queryset(self):
+        query = self.request.GET.get('s')
+        return Vacancy.objects.filter(
+            Q(title__icontains=query) | Q(description__icontains=query) | Q(skills__icontains=query)
+        )
