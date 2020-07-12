@@ -12,15 +12,14 @@
 <main class="container">
     <div class="row">
         <div class="col-8 col-lg-4 offset-2 offset-lg-4">
-            <form class="form-signin pt-5" method="post" action="/login/">
+            <form class="form-signin pt-5" method="post">
                 {% csrf_token %}
                 <div class="text-center mt-5 b-1">
-
                     <h1 class="h3 mb-3 font-weight-normal">Джуманджи</h1>
                     <p class="h5 font-weight-light">Войдите, чтобы управлять</p>
-                    {% if form.errors %}
-                        {{ form.errors }}
-                    {% endif %}
+{#                    {% if form.errors %}#}
+{#                        {{ form.errors }}#}
+{#                    {% endif %}#}
                 </div>
                 <div class="mt-5 form-label-group">
                     <p class="text-muted">Логин</p>

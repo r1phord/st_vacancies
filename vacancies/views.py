@@ -7,7 +7,7 @@ from django.views import View
 from django.views.generic import ListView
 
 from st_vacancies.settings import LOGIN_REDIRECT_URL
-from vacancies.forms import ApplicationForm, RegisterForm, LoginForm, ResumeForm
+from vacancies.forms import ApplicationForm, RegisterForm, ResumeForm, LoginForm
 from vacancies.models import Company, Vacancy, Specialty, Application, Resume
 
 
@@ -40,13 +40,15 @@ class CompanyView(View):
         })
 
 
-class VacanciesView(View):
-    def get(self, request):
-        vacancies = Vacancy.objects.all().select_related('company', 'specialty')
-        return render(request, 'vacancies/vacancies.html', context={
-            'title': 'Все вакансии',
-            'vacancies': vacancies
-        })
+class VacanciesView(ListView):
+    model = Vacancy
+    template_name = 'vacancies/vacancies.html'
+    context_object_name = 'vacancies'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(VacanciesView, self).get_context_data(**kwargs)
+        context['title'] = 'Все вакансии'
+        return context
 
 
 class SpecialtyVacanciesView(View):
