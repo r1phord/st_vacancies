@@ -27,7 +27,7 @@ class Company(models.Model):
 
 class Vacancy(models.Model):
     title = models.CharField(max_length=75)
-    specialty = models.ForeignKey(Specialty, on_delete=models.CASCADE, related_name='vacancies')
+    specialty = models.ForeignKey(Specialty, on_delete=models.CASCADE, related_name='vacancies', null=True)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='vacancies')
     skills = models.CharField(max_length=350)
     description = models.CharField(max_length=700)
