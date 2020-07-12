@@ -21,8 +21,8 @@ for specialty in data.specialties:
 
 for job in data.jobs:
     Vacancy.objects.create(title=job['title'],
-                           specialty=Specialty.objects.filter(code=job['cat'])[0],
-                           company=Company.objects.filter(name=job['company'])[0],
+                           specialty=Specialty.objects.get(code=job['cat']),
+                           company=Company.objects.get(name=job['company']),
                            skills=job['skills'],
                            description=job['desc'],
                            salary_min=job['salary_from'],
