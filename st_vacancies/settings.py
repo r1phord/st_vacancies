@@ -70,7 +70,9 @@ MEDIA_SPECIALITY_IMAGE_DIR = 'speciality_images'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'),
+                 os.path.join(BASE_DIR, '/vacancies/templates'),
+                 os.path.join(BASE_DIR, '/mycompany/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
