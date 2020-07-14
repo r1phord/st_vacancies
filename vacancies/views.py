@@ -53,9 +53,7 @@ class VacanciesView(ListView):
 
 class SpecialtyVacanciesView(View):
     def get(self, request, specialty_code):
-        spec = Specialty.objects.filter(code=specialty_code).first()
-        if not spec:
-            raise Http404('no such specialty')
+        spec = get_object_or_404(Specialty, code=specialty_code)
 
         vacancies = Vacancy.objects.filter(specialty=spec).select_related('company')
         return render(request, 'vacancies/vacancies.html', context={
