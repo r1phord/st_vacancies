@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views import View
+from django.views.generic import ListView
 
 from mycompany.forms import CompanyForm, VacancyForm
 from vacancies.models import Company, Vacancy, Specialty, Application
@@ -41,14 +42,15 @@ class MyCompanyView(View):
         })
 
 
-class MyCompanyVacanciesView(View):
-    def get(self, request):
-        user = request.user
+class MyCompanyVacanciesView(ListView):
+    model = Vacancy
+    template_name = 'mycompany/vacancy-list.html'
+    context_object_name = 'vacancies'
+
+    def get_queryset(self):
+        user = self.request.user
         company = get_object_or_404(Company, owner=user)
-        vacancies = Vacancy.objects.filter(company=company).prefetch_related('applications')
-        return render(request, 'mycompany/vacancy-list.html', context={
-            'vacancies': vacancies
-        })
+        return Vacancy.objects.filter(company=company)
 
 
 def create_vacancy(request):
