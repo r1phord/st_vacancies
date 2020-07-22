@@ -139,6 +139,9 @@ class RegisterView(View):
         if register_form.is_valid():
             data = register_form.cleaned_data
             User.objects.create_user(**data)
+            user = authenticate(username=register_form.data['username'],
+                                password=register_form.data['password'])
+            login(request, user)
             return HttpResponseRedirect('/')
 
         return render(request, 'register.html', context={
@@ -151,8 +154,10 @@ class ResumeView(View):
         resume = Resume.objects.filter(user=request.user).first()
         if resume:
             resume_form = ResumeForm(instance=resume)
+            message = 'Страница редактирования'
             return render(request, 'vacancies/resume-edit.html', context={
-                'form': resume_form
+                'form': resume_form,
+                'message': message
             })
         else:
             return render(request, 'vacancies/resume-create.html')
@@ -161,17 +166,21 @@ class ResumeView(View):
         user = request.user
         resume = Resume.objects.filter(user=user).first()
         resume_form = ResumeForm(request.POST)
+        message = 'Заполните анкету'
         if resume_form.is_valid():
             if resume:
                 resume_form = ResumeForm(request.POST, instance=resume)
                 resume_form.save()
+                message = 'Ваше резюме обновлено!'
             else:
                 resume = resume_form.save(commit=False)
                 resume.user = user
                 resume.save()
+                message = 'Ваше резюме создано!'
         return render(request, 'vacancies/resume-edit.html', context={
             'form': resume_form,
             'resume': resume,
+            'message': message
         })
 
 
