@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 
 from vacancies.models import Application, Resume
@@ -22,6 +23,8 @@ class ApplicationForm(forms.ModelForm):
 
 
 class ResumeForm(forms.ModelForm):
+    SELECT_CLASSES = 'custom-select mr-sm-2'
+
     class Meta:
         model = Resume
         fields = ['name', 'surname', 'status', 'salary', 'education', 'experience', 'portfolio', 'specialty', 'grade']
@@ -30,17 +33,17 @@ class ResumeForm(forms.ModelForm):
         super(ResumeForm, self).__init__(*args, **kwargs)
 
         self.fields['status'].widget.attrs.update({
-            'class': "custom-select mr-sm-2",
+            'class': self.SELECT_CLASSES,
             'id': "userReady",
             'name': "status"
         })
         self.fields['specialty'].widget.attrs.update({
-            'class': "custom-select mr-sm-2",
+            'class': self.SELECT_CLASSES,
             'id': "userSpecialization",
             'name': "specialty"
         })
         self.fields['grade'].widget.attrs.update({
-            'class': "custom-select mr-sm-2",
+            'class': self.SELECT_CLASSES,
             'id': "userQualification",
             'name': "grade"
         })
