@@ -1,14 +1,15 @@
+from django.conf import settings
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.db.models import Q
-from django.http import HttpResponseNotFound, HttpResponseServerError, Http404, HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseNotFound, HttpResponseServerError, Http404, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
+from django.urls import reverse
 from django.views import View
 from django.views.generic import ListView
 
-from st_vacancies.settings import LOGIN_REDIRECT_URL
 from vacancies.forms import ApplicationForm, RegisterForm, ResumeForm, LoginForm
-from vacancies.models import Company, Vacancy, Specialty, Application, Resume
+from vacancies.models import Company, Vacancy, Specialty, Resume
 
 
 def custom_handler404(request, exception):
@@ -50,6 +51,9 @@ class VacanciesView(ListView):
         context['title'] = 'Все вакансии'
         return context
 
+    def get_queryset(self):
+        return Vacancy.objects.all().select_related('company')
+
 
 class SpecialtyVacanciesView(View):
     def get(self, request, specialty_code):
@@ -67,10 +71,7 @@ class SpecialtyVacanciesView(View):
 
 class VacancyView(View):
     def get_vacancy(self, vacancy_id):
-        vacancy = Vacancy.objects.filter(id=vacancy_id).select_related('company', 'specialty').first()
-        if not vacancy:
-            raise Http404
-
+        vacancy = get_object_or_404(Vacancy.objects.select_related('company', 'specialty'), id=vacancy_id)
         return vacancy
 
     def get(self, request, vacancy_id):
@@ -80,14 +81,17 @@ class VacancyView(View):
         })
 
     def post(self, request, vacancy_id):
+        user = request.user
+        if not user.is_authenticated:
+            return HttpResponseRedirect(reverse('login'))
+
         vacancy = self.get_vacancy(vacancy_id)
         application_form = ApplicationForm(request.POST)
         if application_form.is_valid():
-            data = application_form.cleaned_data
-            Application.objects.create(vacancy=vacancy,
-                                       user=request.user,
-                                       **data)
-
+            application = application_form.save(commit=False)
+            application.user = user
+            application.vacancy = vacancy
+            application.save()
             return HttpResponseRedirect(redirect_to='send')
 
         return render(request, 'vacancies/vacancy.html', context={
@@ -116,11 +120,11 @@ class MyLoginView(View):
             if user:
                 if user.is_active:
                     login(request, user)
-                    return HttpResponseRedirect(LOGIN_REDIRECT_URL)
+                    return HttpResponseRedirect(settings.LOGIN_REDIRECT_URL)
                 else:
-                    return HttpResponse('Disabled account')
+                    login_form.add_error(None, 'Disabled account')
             else:
-                return HttpResponse('Invalid login')
+                login_form.add_error(None, 'invalid login or password')
         return render(request, 'login.html', context={
             'form': login_form
         })
