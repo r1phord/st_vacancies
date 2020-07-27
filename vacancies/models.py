@@ -1,13 +1,13 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-from st_vacancies.settings import MEDIA_SPECIALITY_IMAGE_DIR, MEDIA_COMPANY_IMAGE_DIR
+from django.conf import settings
 
 
 class Specialty(models.Model):
     code = models.CharField(max_length=25)
     title = models.CharField(max_length=25)
-    picture = models.ImageField(upload_to=MEDIA_SPECIALITY_IMAGE_DIR)
+    picture = models.ImageField(upload_to=settings.MEDIA_SPECIALITY_IMAGE_DIR)
 
     def __str__(self):
         return self.title
@@ -17,7 +17,7 @@ class Company(models.Model):
     name = models.CharField(max_length=120)
     owner = models.OneToOneField(User, on_delete=models.CASCADE)
     location = models.CharField(max_length=50)
-    logo = models.ImageField(upload_to=MEDIA_COMPANY_IMAGE_DIR, default='100x60.jpg')
+    logo = models.ImageField(upload_to=settings.MEDIA_COMPANY_IMAGE_DIR, default='100x60.jpg')
     description = models.CharField(max_length=350)
     employee_count = models.PositiveIntegerField()
 

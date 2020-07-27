@@ -17,9 +17,13 @@
                 <div class="text-center mt-5 b-1">
                     <h1 class="h3 mb-3 font-weight-normal">Джуманджи</h1>
                     <p class="h5 font-weight-light">Войдите, чтобы управлять</p>
-{#                    {% if form.errors %}#}
-{#                        {{ form.errors }}#}
-{#                    {% endif %}#}
+                    <div>
+                    {% if form.errors %}
+                        {% for error in form.errors.values %}
+                            {{ error }}
+                        {% endfor %}
+                    {% endif %}
+                    </div>
                 </div>
                 <div class="mt-5 form-label-group">
                     <p class="text-muted">Логин</p>
