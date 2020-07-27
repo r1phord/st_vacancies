@@ -16,7 +16,7 @@ urlpatterns = [
     path('login/', MyLoginView.as_view(), name='login'),
     path('register/', RegisterView.as_view(), name='register'),
     path('logout/', LogoutView.as_view(), name='logout'),
-    path('companies/<int:company_id>/', CompanyView.as_view(), name='company'),
+    path('companies/<int:pk>/', CompanyView.as_view(), name='company'),
     path('myresume', ResumeView.as_view(), name='myresume'),
     path('vacancies/', include('vacancies.urls')),
     path('mycompany/', include('mycompany.urls')),
