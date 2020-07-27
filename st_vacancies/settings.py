@@ -8,7 +8,7 @@ env = environ.Env(
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = '@)9_d#ky&_@qoerwjfdfdepjkl61o)iywx30pu2t8+@-!*0+^u@n(&'
 OLD_SECRET_KEY = env('OLD_SECRET_KEY')
 
 DEBUG = env('DEBUG')
