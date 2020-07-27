@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views import View
@@ -9,12 +9,14 @@ from django.views.generic import ListView
 from mycompany.forms import CompanyForm, VacancyForm
 from vacancies.models import Company, Vacancy, Specialty, Application
 
-BASE_SPECIALTY = Specialty.objects.get(code='backend')
+
+def get_company_by_user(user):
+    return Company.objects.filter(owner=user).first()
 
 
 class MyCompanyView(View):
     def get(self, request):
-        company = Company.objects.filter(owner=request.user).first()
+        company = get_company_by_user(request.user)
         if company:
             company_form = CompanyForm(instance=company)
             return render(request, 'mycompany/company-edit.html', context={
@@ -26,7 +28,9 @@ class MyCompanyView(View):
 
     def post(self, request):
         user = request.user
-        company = Company.objects.filter(owner=user).first()
+        if request.POST['create'] == 'Создать карточку компании':
+            pass
+        company = get_company_by_user(request.user)
         company_form = CompanyForm(request.POST, request.FILES)
         if company_form.is_valid():
             if company:
@@ -69,9 +73,7 @@ def create_vacancy(request):
 
 class EditVacancyView(View):
     def get_data_for_context(self, vacancy_id):
-        vacancy = Vacancy.objects.filter(id=vacancy_id).first()
-        if not vacancy:
-            raise Http404()
+        vacancy = get_object_or_404(Vacancy, id=vacancy_id)
         specialties = Specialty.objects.all()
         vacancy_applications = Application.objects.filter(vacancy=vacancy)
         form = VacancyForm(instance=vacancy)

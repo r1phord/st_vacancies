@@ -6,7 +6,7 @@ from django.http import HttpResponseNotFound, HttpResponseServerError, Http404, 
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views import View
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView, TemplateView
 
 from vacancies.forms import ApplicationForm, RegisterForm, ResumeForm, LoginForm
 from vacancies.models import Company, Vacancy, Specialty, Resume
@@ -30,29 +30,23 @@ class MainView(View):
         })
 
 
-class CompanyView(View):
-    def get(self, request, company_id):
-        company = get_object_or_404(Company, id=company_id)
-        vacancies = Vacancy.objects.filter(company=company).select_related('specialty')
+class CompanyView(DetailView):
+    model = Company
+    template_name = 'vacancies/company.html'
+    context_object_name = 'company'
 
-        return render(request, 'vacancies/company.html', context={
-            'company': company,
-            'vacancies': vacancies
-        })
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['vacancies'] = Vacancy.objects.filter(company=self.object).select_related('specialty')
+        return context
 
 
 class VacanciesView(ListView):
     model = Vacancy
     template_name = 'vacancies/vacancies.html'
     context_object_name = 'vacancies'
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(VacanciesView, self).get_context_data(**kwargs)
-        context['title'] = 'Все вакансии'
-        return context
-
-    def get_queryset(self):
-        return Vacancy.objects.all().select_related('company')
+    extra_context = {'title': 'Все вакансии'}
+    queryset = Vacancy.objects.all().select_related('company')
 
 
 class SpecialtyVacanciesView(View):
@@ -98,11 +92,8 @@ class VacancyView(View):
         })
 
 
-class SendApplicationView(View):
-    def get(self, request, vacancy_id):
-        return render(request, 'vacancies/sent.html', context={
-            'vacancy_id': vacancy_id
-        })
+class SendApplicationView(TemplateView):
+    template_name = 'vacancies/sent.html'
 
 
 class MyLoginView(View):
