@@ -5,12 +5,10 @@ import environ
 env = environ.Env(
     DEBUG=(bool, False)
 )
+environ.Env.read_env()
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 SECRET_KEY = env('SECRET_KEY')
-OLD_SECRET_KEY = env('OLD_SECRET_KEY')
-
 DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = ['*']
@@ -31,7 +29,6 @@ INSTALLED_APPS = [
     'django_extensions',
     'debug_toolbar',
     'crispy_forms',
-    'rotatesecretkey',
 
     'vacancies.apps.VacanciesConfig',
     'mycompany.apps.MycompanyConfig',
@@ -45,8 +42,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    #'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'rotatesecretkey.middleware.RotateAuthenticationMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
