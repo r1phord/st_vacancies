@@ -19,30 +19,34 @@ class MyCompanyView(View):
         company = get_company_by_user(request.user)
         if company:
             company_form = CompanyForm(instance=company)
+            message = 'Страница редактирования'
             return render(request, 'mycompany/company-edit.html', context={
                 'company': company,
-                'form': company_form
+                'form': company_form,
+                'message': message
             })
         else:
             return render(request, 'mycompany/company-create.html')
 
     def post(self, request):
         user = request.user
-        if request.POST['create'] == 'Создать карточку компании':
-            pass
         company = get_company_by_user(request.user)
         company_form = CompanyForm(request.POST, request.FILES)
+        message = 'Заполните форму'
         if company_form.is_valid():
             if company:
                 company_form = CompanyForm(request.POST, request.FILES, instance=company)
                 company_form.save()
+                message = 'Информация о компании обновлена '
             else:
                 company = company_form.save(commit=False)
                 company.owner = user
                 company.save()
+                message = 'Компания создана'
         return render(request, 'mycompany/company-edit.html', context={
             'form': company_form,
             'company': company,
+            'message': message
         })
 
 
