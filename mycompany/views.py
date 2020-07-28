@@ -28,8 +28,6 @@ class MyCompanyView(View):
 
     def post(self, request):
         user = request.user
-        if request.POST['create'] == 'Создать карточку компании':
-            pass
         company = get_company_by_user(request.user)
         company_form = CompanyForm(request.POST, request.FILES)
         if company_form.is_valid():
