@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.db.models import Q
-from django.http import HttpResponseNotFound, HttpResponseServerError, Http404, HttpResponseRedirect
+from django.http import HttpResponseNotFound, HttpResponseServerError, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views import View
@@ -12,7 +12,7 @@ from vacancies.forms import ApplicationForm, RegisterForm, ResumeForm, LoginForm
 from vacancies.models import Company, Vacancy, Specialty, Resume
 
 
-def custom_handler404(request, exception):
+def custom_handler404(request):
     return HttpResponseNotFound('Страница не найдена.')
 
 
