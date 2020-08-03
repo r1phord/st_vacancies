@@ -12,7 +12,7 @@ from vacancies.forms import ApplicationForm, RegisterForm, ResumeForm, LoginForm
 from vacancies.models import Company, Vacancy, Specialty, Resume
 
 
-def custom_handler404(request):
+def custom_handler404(request, exception):
     return HttpResponseNotFound('Страница не найдена.')
 
 
