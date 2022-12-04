@@ -1,15 +1,10 @@
 import os
 
-import environ
-
-env = environ.Env(
-    DEBUG=(bool, False)
-)
-environ.Env.read_env()
+from decouple import config
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.getenv('SECRET_KEY', default='m$df136q8g!6196l2j4o3f&&xhh6nbgpv7n1-zot32xjp+_z0-')
-DEBUG = env('DEBUG')
+DEBUG = config('DEBUG')
 
 ALLOWED_HOSTS = ['*']
 
@@ -80,9 +75,18 @@ WSGI_APPLICATION = 'st_vacancies.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    # }
+
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT'),
     }
 }
 
@@ -133,3 +137,5 @@ INTERNAL_IPS = [
     '127.0.0.1',
     # ...
 ]
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
