@@ -4,8 +4,8 @@ from django.contrib import admin
 from django.contrib.auth.views import LogoutView
 from django.urls import path, include
 
-from vacancies.views import MainView, CompanyView, custom_handler500, custom_handler404, MyLoginView, RegisterView, \
-    ResumeView, SearchView
+from vacancies.views import MainView, CompanyView, custom_handler500, custom_handler404, ResumeView, SearchView
+from users.views import MyLoginView, RegisterView
 
 handler404 = custom_handler404
 handler500 = custom_handler500

@@ -27,6 +27,7 @@ INSTALLED_APPS = [
 
     'vacancies.apps.VacanciesConfig',
     'mycompany.apps.MycompanyConfig',
+    'users.apps.UsersConfig',
 
     'django_unused_media'
 ]

@@ -1,1 +1,0 @@
-web: gunicorn st_vacancies.wsgi
