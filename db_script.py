@@ -1,7 +1,19 @@
 from random import randint
 
+import os
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'st_vacancies.settings')
+
+import django
+
+django.setup()
+
+from django.contrib.auth.models import User
+
+
 from vacancies import data
 from vacancies.models import Company, Specialty, Vacancy
+
 
 # uncomment if need to clear database
 
@@ -9,11 +21,14 @@ from vacancies.models import Company, Specialty, Vacancy
 # Specialty.objects.all().delete()
 # Vacancy.objects.all().delete()
 
+id = 2
 for company in data.companies:
     Company.objects.create(name=company['name'],
+                           owner = User.objects.get(pk=id),
                            location=company['location'],
                            description='some description',
-                           employee_count=randint(2, 1000))  # generate random count of employers until real data
+                           employee_count=randint(2, 1000))
+    id += 1
 
 for specialty in data.specialties:
     Specialty.objects.create(code=specialty['code'],
